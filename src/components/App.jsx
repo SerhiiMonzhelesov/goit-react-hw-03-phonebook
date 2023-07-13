@@ -42,7 +42,7 @@ class App extends Component {
 
   render() {
     const { contacts } = this.state;
-
+    console.log(contacts);
     return (
       <Container>
         <h1>Phonebook</h1>
