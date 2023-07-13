@@ -11,6 +11,20 @@ class App extends Component {
     filter: '',
   };
 
+  componentDidMount() {
+    const strigifiedContacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(strigifiedContacts) ?? [];
+
+    this.setState({ contacts: parsedContacts });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts.length !== this.state.contacts.length) {
+      const stringifiedContacts = JSON.stringify(this.state.contacts);
+      localStorage.setItem('contacts', stringifiedContacts);
+    }
+  }
+
   addContact = contact => {
     const newContact = {
       id: nanoid(),
@@ -42,7 +56,7 @@ class App extends Component {
 
   render() {
     const { contacts } = this.state;
-   
+
     return (
       <Container>
         <h1>Phonebook</h1>
@@ -52,10 +66,9 @@ class App extends Component {
         ) : (
           <p className="message">No contacts in the phonebook</p>
         )}
-        {contacts.length > 1 && (
+        {!!contacts.length && (
           <Filter handleChangeFilter={this.handleChangeFilter} />
         )}
-
         <Contacts contacts={this.filterContacts()} onRemove={this.onRemove} />
       </Container>
     );
